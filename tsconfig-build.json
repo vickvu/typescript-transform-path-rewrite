@@ -1,0 +1,11 @@
+{
+    "include": ["src/**/*.ts"],
+    "exclude": ["src/loader.ts"],
+    "extends": "./tsconfig-base.json",
+    "compilerOptions": {
+        "types": ["node"],
+        "outDir": "dist",
+        "module": "commonjs",
+        "rootDirs": ["src"]
+    }
+}

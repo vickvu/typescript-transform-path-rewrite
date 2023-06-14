@@ -1,0 +1,11 @@
+{
+    "reporterEnabled": "mochawesome",
+    "mochawesomeReporterOptions": {
+        "reportFilename": "index",
+        "reportDir": "output/coverage/report",
+        "reportTitle": "typescript-transform-path-rewrite",
+        "reportPageTitle": "typescript-transform-path-rewrite",
+        "inline": true,
+        "quiet": true
+    }
+}

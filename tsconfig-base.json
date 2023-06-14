@@ -1,0 +1,24 @@
+{
+    "exclude": ["node_modules", "dist"],
+    "compileOnSave": false,
+    "compilerOptions": {
+        "importHelpers": false,
+        "sourceMap": true,
+        "inlineSourceMap": false,
+        "allowJs": true,
+        "allowSyntheticDefaultImports": true,
+        "declaration": true,
+        "esModuleInterop": true,
+        "listEmittedFiles": false,
+        "listFiles": false,
+        "noFallthroughCasesInSwitch": true,
+        "noImplicitAny": false,
+        "pretty": true,
+        "resolveJsonModule": true,
+        "skipLibCheck": true,
+        "strict": false,
+        "traceResolution": false,
+        "target": "es2020",
+        "moduleResolution": "node16"
+    }
+}

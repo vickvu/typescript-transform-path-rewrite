@@ -1,0 +1,51 @@
+{
+    "include": ["src/**/*.ts", "src2/**/*.ts", "src3/**/*.ts"],
+    "exclude": ["node_modules", "dist"],
+    "compileOnSave": false,
+    "compilerOptions": {
+        "importHelpers": false,
+        "sourceMap": true,
+        "inlineSourceMap": false,
+        "allowJs": true,
+        "allowSyntheticDefaultImports": true,
+        "declaration": true,
+        "esModuleInterop": true,
+        "listEmittedFiles": false,
+        "listFiles": false,
+        "noFallthroughCasesInSwitch": true,
+        "noImplicitAny": false,
+        "pretty": true,
+        "resolveJsonModule": true,
+        "skipLibCheck": true,
+        "strict": false,
+        "traceResolution": false,
+        "types": ["node"],
+        "target": "es2020",
+        "baseUrl": "src",
+        "rootDir": ".",
+        "rootDirs": ["src", "src2"],
+        "outDir": "dist",
+        "module": "CommonJS",
+        "moduleResolution": "node16",
+        "paths": {
+            "@LIB1": ["lib1"],
+            "@LIB1/*": ["lib1/*"],
+            "@LIB2/*": ["lib2/*"]
+        },
+        "plugins": [
+            {
+                "transform": "../../dist/transformer.js",
+                "alias": {
+                    "node-(.+)$": "url-template"
+                }
+            },
+            {
+                "transform": "../../dist/transformer.js",
+                "afterDeclarations": true
+            }
+        ]
+    },
+    "ts-node": {
+        "require": ["../../dist/register.js"]
+    }
+}

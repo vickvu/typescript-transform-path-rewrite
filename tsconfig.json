@@ -1,0 +1,10 @@
+{
+    "include": ["src/**/*.ts", "test/**/*.ts"],
+    "extends": "./tsconfig-base.json",
+    "compilerOptions": {
+        "types": ["node", "mocha"],
+        "outDir": "dist",
+        "module": "commonjs",
+        "rootDirs": ["src", "test"]
+    }
+}

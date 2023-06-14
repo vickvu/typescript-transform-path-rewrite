@@ -1,0 +1,7 @@
+/.vscode
+/node_modules
+/output
+/dist
+/test-projects/**/dist
+/test-projects/**/node_modules
+/test-projects/**/package-lock.json
