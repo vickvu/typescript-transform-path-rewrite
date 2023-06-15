@@ -59,6 +59,12 @@ Use [ts-patch](https://github.com/nonara/ts-patch)'s `tspc` instead of `tsc`
 }
 ```
 
+> Note: `ts-node` has [issue with Node.js 20 and ESM](https://github.com/TypeStrong/ts-node/issues/1997), to run `ts-node` in this scenario, use this command
+
+```
+node --loader ts-node/esm <YOUR_TS_FILE>
+```
+
 ## ECMAScript Module
 
 The transformer will make sure javascript files that are compiled with [tsconfig.json's module](https://www.typescriptlang.org/tsconfig#module) configured for [ECMAScript Module](https://nodejs.org/api/esm.html) will have full extension (either `.js` or `.mjs`) as required by [Node.js](https://nodejs.org/api/esm.html#mandatory-file-extensions)

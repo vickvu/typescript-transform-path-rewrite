@@ -8,7 +8,7 @@
     "type": "module",
     "scripts": {
         "build": "npm i && tspc",
-        "exec": "npm i && TRANSFORM_PLUGIN_NAME=../../dist/transformer.js ts-node src/index.ts"
+        "exec": "npm i && TRANSFORM_PLUGIN_NAME=../../dist/transformer.js node --loader ts-node/esm src/index.ts"
     },
     "devDependencies": {
         "@types/node": "^20.3.1",
