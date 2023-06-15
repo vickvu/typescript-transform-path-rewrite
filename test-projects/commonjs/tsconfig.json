@@ -46,6 +46,6 @@
         ]
     },
     "ts-node": {
-        "require": ["../../dist/register.js"]
+        "compiler": "ts-patch/compiler"
     }
 }

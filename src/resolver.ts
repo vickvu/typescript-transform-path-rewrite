@@ -5,12 +5,13 @@ import { PROJECT_NAME } from './constants';
 
 /* eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call*/
 const log: (msg: string) => void = debug(PROJECT_NAME);
+
 type Matcher = (moduleName: string, sourceFileName: string) => string;
 
-const isBaseDir = (baseDir: string, testDir: string): boolean => {
-    const relative = pathUtils.relative(baseDir, testDir);
-    return relative ? !relative.startsWith('..') && !pathUtils.isAbsolute(relative) : true;
-};
+function isParentDir(dir: string, parentToTest: string): boolean {
+    const diff = pathUtils.relative(parentToTest, dir);
+    return diff.length === 0 || (!diff.startsWith('..') && !pathUtils.isAbsolute(diff));
+}
 
 export class Resolver {
     private matchers: Matcher[];
@@ -77,15 +78,13 @@ export class Resolver {
             let fileRootDir: string;
             let moduleRootDir: string;
             this.compilerOptions.rootDirs.forEach(function (rootDir) {
-                if (isBaseDir(rootDir, resolvedFileDir) && (!moduleRootDir || rootDir.length > moduleRootDir.length)) {
+                if (isParentDir(resolvedFileDir, rootDir) && (!moduleRootDir || rootDir.length > moduleRootDir.length)) {
                     moduleRootDir = rootDir;
                 }
-                if (isBaseDir(rootDir, sourceFileDir) && (!fileRootDir || rootDir.length > fileRootDir.length)) {
+                if (isParentDir(sourceFileDir, rootDir) && (!fileRootDir || rootDir.length > fileRootDir.length)) {
                     fileRootDir = rootDir;
                 }
             });
-
-            /* Remove base dirs to make relative to root */
             if (fileRootDir && moduleRootDir) {
                 sourceFileDir = pathUtils.relative(fileRootDir, sourceFileDir);
                 resolvedFileDir = pathUtils.relative(moduleRootDir, resolvedFileDir);

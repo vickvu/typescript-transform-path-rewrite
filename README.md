@@ -49,20 +49,14 @@ Use [ts-patch](https://github.com/nonara/ts-patch)'s `tspc` instead of `tsc`
 
 ### Run with ts-node
 
-Add `typescript-transform-path-rewrite/register` to `require` property of [ts-node](https://github.com/TypeStrong/ts-node)
+[ts-node](https://github.com/TypeStrong/ts-node) must be used with [ts-patch](https://github.com/nonara/ts-patch)
 
 ```jsonc
 {
     "ts-node": {
-        "require": ["typescript-transform-path-rewrite/register"]
+        "compiler": ["ts-patch/compiler"]
     }
 }
-```
-
-Note that `ts-node` does not work well if [tsconfig.json's module](https://www.typescriptlang.org/tsconfig#module) is configured for [ESM](https://nodejs.org/api/esm.html) (for e.g. `es2020` or `node16`). In order to use `ts-node` in that case, we provide a convenivent [loader](https://nodejs.org/api/esm.html#loaders) that work in tandem with `ts-node`, for example
-
-```
-node --loader typescript-transform-path-rewrite/loader src/index.ts
 ```
 
 ## ECMAScript Module
