@@ -29,11 +29,15 @@ export class ImportProcessor extends Processor {
             const nonTypeNamedBindings: ImportSpecifier[] = [];
             if (!typeOnly && node.importClause.namedBindings && isNamedImports(node.importClause.namedBindings)) {
                 node.importClause.namedBindings.elements.forEach(function (importSpecifier) {
+                    importSpecifier.name.escapedText;
                     if (!importSpecifier.isTypeOnly) {
                         nonTypeNamedBindings.push(importSpecifier);
                     }
                 });
-                typeOnly = nonTypeNamedBindings.length === 0;
+                // In some case nonTypeNamedBindings is empty but this is not a typeOnly import
+                // For example
+                // import a, {type b} from '.'
+                typeOnly = node.importClause.name != null && nonTypeNamedBindings.length === 0;
             }
             return {
                 node,
@@ -68,9 +72,9 @@ export class ImportProcessor extends Processor {
                 node.importClause,
                 false,
                 node.importClause.name,
-                node.importClause.namedBindings
+                node.importClause.namedBindings != null && nonTypeNamedBindings.length > 0
                     ? this.factory.updateNamedImports(<NamedImports>node.importClause.namedBindings, nonTypeNamedBindings)
-                    : node.importClause.namedBindings,
+                    : undefined,
             ),
             this.factory.createStringLiteral(moduleName),
             node.assertClause,
