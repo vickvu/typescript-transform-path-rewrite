@@ -68,7 +68,9 @@ export class ImportProcessor extends Processor {
                 node.importClause,
                 false,
                 node.importClause.name,
-                this.factory.updateNamedImports(<NamedImports>node.importClause.namedBindings, nonTypeNamedBindings),
+                node.importClause.namedBindings
+                    ? this.factory.updateNamedImports(<NamedImports>node.importClause.namedBindings, nonTypeNamedBindings)
+                    : node.importClause.namedBindings,
             ),
             this.factory.createStringLiteral(moduleName),
             node.assertClause,
