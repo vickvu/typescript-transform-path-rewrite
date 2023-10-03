@@ -24,12 +24,12 @@
         "baseUrl": "src",
         "rootDir": "src",
         "outDir": "dist",
-        "module": "ES2020",
-        "moduleResolution": "node",
+        "module": "node16",
+        "moduleResolution": "node16",
         "paths": {
-            "@LIB1": ["lib1"],
-            "@LIB1/*": ["lib1/*"],
-            "@LIB2/*": ["lib2/*.mts", "lib2/*"]
+            "@LIB1": ["lib1/index.ts"],
+            "@LIB1/*": ["lib1/*.ts"],
+            "@LIB2/*": ["lib2/*.mts", "lib2/*.ts"]
         },
         "plugins": [
             {

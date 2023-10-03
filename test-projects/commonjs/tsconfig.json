@@ -25,7 +25,7 @@
         "rootDir": ".",
         "rootDirs": ["src", "src2"],
         "outDir": "dist",
-        "module": "CommonJS",
+        "module": "node16",
         "moduleResolution": "node16",
         "paths": {
             "@LIB1": ["lib1"],

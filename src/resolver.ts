@@ -2,6 +2,7 @@ import pathUtils from 'node:path';
 import debug from 'debug';
 import typescript from 'typescript';
 import { PROJECT_NAME } from './constants';
+import { existsSync, readFileSync } from 'node:fs';
 
 /* eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call*/
 const log: (msg: string) => void = debug(PROJECT_NAME);
@@ -13,14 +14,21 @@ function isParentDir(dir: string, parentToTest: string): boolean {
     return diff.length === 0 || (!diff.startsWith('..') && !pathUtils.isAbsolute(diff));
 }
 
+interface PackageJson {
+    found: boolean;
+    type?: 'module' | 'commonjs';
+}
+
 export class Resolver {
     private matchers: Matcher[];
     private ts: typeof typescript;
     private compilerOptions: typescript.CompilerOptions;
+    private cachedPackageJson: Record<string, PackageJson>;
 
     constructor(ts: typeof typescript, compilerOptions: typescript.CompilerOptions, alias?: Record<string, string>) {
         this.ts = ts;
         this.compilerOptions = compilerOptions;
+        this.cachedPackageJson = {};
 
         // Build matchers from compiler options
         this.matchers = [
@@ -73,7 +81,8 @@ export class Resolver {
         const resolvedFileBaseWithoutExt = resolvedFile.name;
         const resolvedFileExt = resolvedFile.ext;
         let resolvedFileDir = resolvedFile.dir;
-        let sourceFileDir = pathUtils.dirname(sourceFilePath);
+        const originalSourceFileDir = pathUtils.dirname(sourceFilePath);
+        let sourceFileDir = originalSourceFileDir;
         if (this.compilerOptions.rootDirs) {
             let fileRootDir: string;
             let moduleRootDir: string;
@@ -92,7 +101,7 @@ export class Resolver {
         }
         const normalisedResolvedFileDir = pathUtils.relative(sourceFileDir, resolvedFileDir);
         let normalisedResolvedFileBase = resolvedFileBaseWithoutExt;
-        if (this.isESM()) {
+        if (this.isESM(originalSourceFileDir)) {
             if (resolvedFileExt === '.ts') {
                 normalisedResolvedFileBase += '.js';
             } else if (resolvedFileExt === '.mts') {
@@ -108,7 +117,11 @@ export class Resolver {
         return normalisedResolvedFilePath;
     }
 
-    isESM(): boolean {
+    isESM(sourceFileDir: string): boolean {
+        if (this.compilerOptions.module === typescript.ModuleKind.Node16 || this.compilerOptions.module === typescript.ModuleKind.NodeNext) {
+            const pkg = this.findNearestPackageJson(sourceFileDir);
+            return pkg && pkg.found && pkg.type === 'module';
+        }
         return (
             this.compilerOptions.module !== typescript.ModuleKind.None &&
             this.compilerOptions.module !== typescript.ModuleKind.CommonJS &&
@@ -116,5 +129,50 @@ export class Resolver {
             this.compilerOptions.module !== typescript.ModuleKind.UMD &&
             this.compilerOptions.module !== typescript.ModuleKind.System
         );
+    }
+
+    private findNearestPackageJson(srcDir: string): PackageJson {
+        if (!this.cachedPackageJson[srcDir]) {
+            let oldSrcDir = srcDir;
+            let currenSrcDir = srcDir;
+            while (!this.cachedPackageJson[srcDir]) {
+                // Try to read the package.json
+                const pkgJsonPath = pathUtils.resolve(currenSrcDir, 'package.json');
+                try {
+                    if (existsSync(pkgJsonPath)) {
+                        const data = <PackageJson>JSON.parse(readFileSync(pkgJsonPath, 'utf-8'));
+                        if (
+                            typeof data === 'object' &&
+                            (data.type == null || data.type.toLowerCase() === 'commonjs' || data.type.toLowerCase() === 'module')
+                        ) {
+                            this.cachedPackageJson[srcDir] = this.cachedPackageJson[currenSrcDir] = {
+                                found: true,
+                                type: data.type ? <'module' | 'commonjs'>data.type.toLowerCase() : 'commonjs',
+                            };
+                        }
+                    }
+                } catch (err) {
+                    // Ignore error
+                }
+                if (!this.cachedPackageJson[srcDir]) {
+                    // Go to parent directory
+                    oldSrcDir = currenSrcDir;
+                    currenSrcDir = pathUtils.resolve(currenSrcDir, '..');
+                    if (this.cachedPackageJson[currenSrcDir]) {
+                        // In the cache
+                        this.cachedPackageJson[srcDir] = this.cachedPackageJson[currenSrcDir];
+                        break;
+                    }
+                    if (currenSrcDir === oldSrcDir) {
+                        // Cannot go any further
+                        this.cachedPackageJson[srcDir] = this.cachedPackageJson[currenSrcDir] = {
+                            found: false,
+                        };
+                        break;
+                    }
+                }
+            }
+        }
+        return this.cachedPackageJson[srcDir];
     }
 }
