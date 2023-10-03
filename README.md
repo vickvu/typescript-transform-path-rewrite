@@ -1,9 +1,9 @@
 # typescript-transform-path-rewrite
 
-![Build Status](https://github.com/vickvu/typescript-transform-path-rewrite/actions/workflows/main.yml/badge.svg)
-![Publish Status](https://github.com/vickvu/typescript-transform-path-rewrite/actions/workflows/publish.yml/badge.svg)
+[![Build Status](https://github.com/vickvu/typescript-transform-path-rewrite/actions/workflows/main.yml/badge.svg)](https://github.com/vickvu/typescript-transform-path-rewrite/actions/workflows/main.yml)
+[![Publish Status](https://github.com/vickvu/typescript-transform-path-rewrite/actions/workflows/publish.yml/badge.svg)](https://github.com/vickvu/typescript-transform-path-rewrite/actions/workflows/publish.yml)
 
-![npm](https://img.shields.io/npm/v/typescript-transform-path-rewrite)
+[![npm](https://img.shields.io/npm/v/typescript-transform-path-rewrite)](https://www.npmjs.com/package/typescript-transform-path-rewrite)
 [![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-%23FE5196?logo=conventionalcommits&logoColor=white)](https://conventionalcommits.org)
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
 
