@@ -14,6 +14,7 @@ export abstract class Processor {
         this.factory = factory;
     }
 
+    /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
     parse(node: typescript.Node): BaseParseResult {
         return null;
     }

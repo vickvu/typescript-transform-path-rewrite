@@ -54,7 +54,7 @@ Use [ts-patch](https://github.com/nonara/ts-patch)'s `tspc` instead of `tsc`
 ```jsonc
 {
     "ts-node": {
-        "compiler": ["ts-patch/compiler"]
+        "compiler": "ts-patch/compiler"
     }
 }
 ```

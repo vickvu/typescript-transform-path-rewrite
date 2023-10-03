@@ -1,8 +1,12 @@
-import { getValue as getValue1 } from '@LIB1/index';
-
+import { getValue as getValue1, type MyInterface2 } from '@LIB1/index';
+import type { MyInterface } from '@LIB1/types';
 import { func1 } from '@LIB2/func1';
 
-export function func() {
+export function func(): MyInterface {
+    return func1();
+}
+
+export function func2(): MyInterface2 {
     return func1();
 }
 

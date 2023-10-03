@@ -26,6 +26,11 @@ describe('Transformer', function () {
             testFile.should.match(/import\("url-template"\)/);
             testFile.should.match(/require\("\.\/lib2\/func1"\)/);
             testFile.should.match(/require\("\.\/lib2\/func2"\)/);
+            // Should not emmit import type
+            testFile.should.not.match(/type /);
+            const dtsFile = await readFile(pathUtils.resolve(testCommonJsDir, 'dist/src/index.d.ts'), 'utf-8');
+            dtsFile.should.match(/import { type MyInterface2 } from "\.\/lib1\/index"/);
+            dtsFile.should.match(/import type { MyInterface } from "\.\/lib1\/types"/);
         });
 
         it('should resolve module in ts-node', async function () {
@@ -52,6 +57,11 @@ describe('Transformer', function () {
             const testFile = await readFile(pathUtils.resolve(testESMDir, 'dist/index.js'), 'utf-8');
             testFile.should.match(/from "\.\/lib1\/index\.js"/);
             testFile.should.match(/from "\.\/lib2\/func1\.mjs"/);
+            // Should not emmit import type
+            testFile.should.not.match(/type/);
+            const dtsFile = await readFile(pathUtils.resolve(testESMDir, 'dist/index.d.ts'), 'utf-8');
+            dtsFile.should.match(/import { type MyInterface2 } from "\.\/lib1\/index\.js"/);
+            dtsFile.should.match(/import type { MyInterface } from "\.\/lib1\/types\.js"/);
         });
 
         it('should resolve module in ts-node', async function () {
