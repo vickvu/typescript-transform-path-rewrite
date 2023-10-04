@@ -37,7 +37,7 @@ export class ImportProcessor extends Processor {
                 // In some case nonTypeNamedBindings is empty but this is not a typeOnly import
                 // For example
                 // import a, {type b} from '.'
-                typeOnly = node.importClause.name != null && nonTypeNamedBindings.length === 0;
+                typeOnly = node.importClause.name == null && nonTypeNamedBindings.length === 0;
             }
             return {
                 node,
