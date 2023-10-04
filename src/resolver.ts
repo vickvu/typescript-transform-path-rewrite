@@ -1,6 +1,6 @@
 import pathUtils from 'node:path';
 import debug from 'debug';
-import typescript from 'typescript';
+import typescript, { ModuleKind } from 'typescript';
 import { PROJECT_NAME } from './constants';
 import { existsSync, readFileSync } from 'node:fs';
 
@@ -77,10 +77,12 @@ export class Resolver {
         if (!resolvedModule || resolvedModule.packageId) {
             return null;
         }
-        const resolvedFile = pathUtils.parse(resolvedModule.resolvedFileName);
-        const resolvedFileBaseWithoutExt = resolvedFile.name;
-        const resolvedFileExt = resolvedFile.ext;
-        let resolvedFileDir = resolvedFile.dir;
+        let resolvedFileDir = pathUtils.dirname(resolvedModule.resolvedFileName);
+        const resolvedFileExt = resolvedModule.extension;
+        const resolvedFileBaseWithoutExt = resolvedModule.resolvedFileName.substring(
+            resolvedFileDir.length + 1,
+            resolvedModule.resolvedFileName.length - resolvedFileExt.length,
+        );
         const originalSourceFileDir = pathUtils.dirname(sourceFilePath);
         let sourceFileDir = originalSourceFileDir;
         if (this.compilerOptions.rootDirs) {
@@ -102,7 +104,7 @@ export class Resolver {
         const normalisedResolvedFileDir = pathUtils.relative(sourceFileDir, resolvedFileDir);
         let normalisedResolvedFileBase = resolvedFileBaseWithoutExt;
         if (this.isESM(originalSourceFileDir)) {
-            if (resolvedFileExt === '.ts') {
+            if (resolvedFileExt === '.ts' || resolvedFileExt === '.d.ts') {
                 normalisedResolvedFileBase += '.js';
             } else if (resolvedFileExt === '.mts') {
                 normalisedResolvedFileBase += '.mjs';
@@ -118,16 +120,16 @@ export class Resolver {
     }
 
     isESM(sourceFileDir: string): boolean {
-        if (this.compilerOptions.module === typescript.ModuleKind.Node16 || this.compilerOptions.module === typescript.ModuleKind.NodeNext) {
+        if (this.compilerOptions.module === ModuleKind.Node16 || this.compilerOptions.module === ModuleKind.NodeNext) {
             const pkg = this.findNearestPackageJson(sourceFileDir);
             return pkg && pkg.found && pkg.type === 'module';
         }
         return (
-            this.compilerOptions.module !== typescript.ModuleKind.None &&
-            this.compilerOptions.module !== typescript.ModuleKind.CommonJS &&
-            this.compilerOptions.module !== typescript.ModuleKind.AMD &&
-            this.compilerOptions.module !== typescript.ModuleKind.UMD &&
-            this.compilerOptions.module !== typescript.ModuleKind.System
+            this.compilerOptions.module !== ModuleKind.None &&
+            this.compilerOptions.module !== ModuleKind.CommonJS &&
+            this.compilerOptions.module !== ModuleKind.AMD &&
+            this.compilerOptions.module !== ModuleKind.UMD &&
+            this.compilerOptions.module !== ModuleKind.System
         );
     }
 
