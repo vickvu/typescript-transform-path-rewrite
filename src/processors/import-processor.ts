@@ -1,4 +1,4 @@
-import typescript, { ImportSpecifier, NamedImportBindings, NamedImports } from 'typescript';
+import typescript, { ImportSpecifier, NamedImportBindings, NamedImports, NamespaceImport, SyntaxKind } from 'typescript';
 import { BaseParseResult, Processor } from './processor';
 
 interface ParseResult extends BaseParseResult {
@@ -6,10 +6,15 @@ interface ParseResult extends BaseParseResult {
     keepImport: boolean;
     typeOnly?: boolean;
     nonTypeNamedBindings?: ImportSpecifier[];
+    namespaceImport?: NamespaceImport;
 }
 
 function isNamedImports(bindings: NamedImportBindings): bindings is NamedImports {
-    return Array.isArray((<NamedImports>bindings).elements);
+    return bindings.kind === SyntaxKind.NamedImports && Array.isArray(bindings.elements);
+}
+
+function isNamespaceImport(bindings: NamedImportBindings): bindings is NamespaceImport {
+    return bindings.kind === SyntaxKind.NamespaceImport;
 }
 
 /**
@@ -27,17 +32,21 @@ export class ImportProcessor extends Processor {
             }
             let typeOnly = node.importClause.isTypeOnly;
             const nonTypeNamedBindings: ImportSpecifier[] = [];
-            if (!typeOnly && node.importClause.namedBindings && isNamedImports(node.importClause.namedBindings)) {
-                node.importClause.namedBindings.elements.forEach(function (importSpecifier) {
-                    importSpecifier.name.escapedText;
-                    if (!importSpecifier.isTypeOnly) {
-                        nonTypeNamedBindings.push(importSpecifier);
-                    }
-                });
-                // In some case nonTypeNamedBindings is empty but this is not a typeOnly import
-                // For example
-                // import a, {type b} from '.'
-                typeOnly = node.importClause.name == null && nonTypeNamedBindings.length === 0;
+            let namespaceImport: NamespaceImport;
+            if (!typeOnly && node.importClause.namedBindings) {
+                if (isNamedImports(node.importClause.namedBindings)) {
+                    node.importClause.namedBindings.elements.forEach(function (importSpecifier) {
+                        if (!importSpecifier.isTypeOnly) {
+                            nonTypeNamedBindings.push(importSpecifier);
+                        }
+                    });
+                    // In some case nonTypeNamedBindings is empty but this is not a typeOnly import
+                    // For example
+                    // import a, {type b} from '.'
+                    typeOnly = node.importClause.name == null && nonTypeNamedBindings.length === 0;
+                } else if (isNamespaceImport(node.importClause.namedBindings)) {
+                    namespaceImport = node.importClause.namedBindings;
+                }
             }
             return {
                 node,
@@ -45,12 +54,13 @@ export class ImportProcessor extends Processor {
                 moduleName: node.moduleSpecifier.text,
                 typeOnly,
                 nonTypeNamedBindings,
+                namespaceImport,
             };
         }
         return null;
     }
 
-    updateModuleName(moduleName: string, { node, keepImport, typeOnly, nonTypeNamedBindings }: ParseResult): typescript.Node {
+    updateModuleName(moduleName: string, { node, keepImport, typeOnly, nonTypeNamedBindings, namespaceImport }: ParseResult): typescript.Node {
         if (keepImport) {
             // For .d.ts file and file without import caluse (for .e.g. import '../src'), preserve the import
             return this.factory.updateImportDeclaration(
@@ -74,7 +84,7 @@ export class ImportProcessor extends Processor {
                 node.importClause.name,
                 node.importClause.namedBindings != null && nonTypeNamedBindings.length > 0
                     ? this.factory.updateNamedImports(<NamedImports>node.importClause.namedBindings, nonTypeNamedBindings)
-                    : undefined,
+                    : namespaceImport,
             ),
             this.factory.createStringLiteral(moduleName),
             node.assertClause,
