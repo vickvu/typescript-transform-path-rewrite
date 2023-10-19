@@ -108,6 +108,8 @@ export class Resolver {
                 normalisedResolvedFileBase += '.js';
             } else if (resolvedFileExt === '.mts') {
                 normalisedResolvedFileBase += '.mjs';
+            } else if (resolvedFileExt === '.cts') {
+                normalisedResolvedFileBase += '.cjs';
             } else {
                 normalisedResolvedFileBase += resolvedFileExt;
             }
