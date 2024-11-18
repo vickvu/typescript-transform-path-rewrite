@@ -21,8 +21,9 @@ function isNamespaceImport(bindings: NamedImportBindings): bindings is Namespace
  * Processor for `import module from 'module'`
  */
 export class ImportProcessor extends Processor {
-    parse(node: typescript.Node): ParseResult {
+    parse(node: typescript.Node) {
         if (this.ts.isImportDeclaration(node) && this.ts.isStringLiteral(node.moduleSpecifier)) {
+            /* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition */
             if (node.importClause == null || node.getSourceFile() == null) {
                 return {
                     node,
@@ -32,7 +33,7 @@ export class ImportProcessor extends Processor {
             }
             let typeOnly = node.importClause.isTypeOnly;
             const nonTypeNamedBindings: ImportSpecifier[] = [];
-            let namespaceImport: NamespaceImport;
+            let namespaceImport: NamespaceImport | undefined;
             if (!typeOnly && node.importClause.namedBindings) {
                 if (isNamedImports(node.importClause.namedBindings)) {
                     node.importClause.namedBindings.elements.forEach(function (importSpecifier) {
@@ -57,10 +58,10 @@ export class ImportProcessor extends Processor {
                 namespaceImport,
             };
         }
-        return null;
+        return undefined;
     }
 
-    updateModuleName(moduleName: string, { node, keepImport, typeOnly, nonTypeNamedBindings, namespaceImport }: ParseResult): typescript.Node {
+    updateModuleName(moduleName: string, { node, keepImport, typeOnly, nonTypeNamedBindings, namespaceImport }: ParseResult) {
         if (keepImport) {
             // For .d.ts file and file without import caluse (for .e.g. import '../src'), preserve the import
             return this.factory.updateImportDeclaration(
@@ -68,25 +69,29 @@ export class ImportProcessor extends Processor {
                 node.modifiers,
                 node.importClause,
                 this.factory.createStringLiteral(moduleName),
+                /* eslint-disable-next-line @typescript-eslint/no-deprecated */
                 node.assertClause,
             );
         }
         if (typeOnly) {
             // Do not emit import for type only
-            return null;
+            return undefined;
         }
         return this.factory.updateImportDeclaration(
             node,
             node.modifiers,
-            this.factory.updateImportClause(
-                node.importClause,
-                false,
-                node.importClause.name,
-                node.importClause.namedBindings != null && nonTypeNamedBindings.length > 0
-                    ? this.factory.updateNamedImports(<NamedImports>node.importClause.namedBindings, nonTypeNamedBindings)
-                    : namespaceImport,
-            ),
+            node.importClause
+                ? this.factory.updateImportClause(
+                      node.importClause,
+                      false,
+                      node.importClause.name,
+                      node.importClause.namedBindings != null && nonTypeNamedBindings && nonTypeNamedBindings.length > 0
+                          ? this.factory.updateNamedImports(<NamedImports>node.importClause.namedBindings, nonTypeNamedBindings)
+                          : namespaceImport,
+                  )
+                : undefined,
             this.factory.createStringLiteral(moduleName),
+            /* eslint-disable-next-line @typescript-eslint/no-deprecated */
             node.assertClause,
         );
     }

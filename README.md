@@ -24,20 +24,20 @@ npm install --save-dev typescript-transform-path-rewrite
     "compilerOptions": {
         "baseUrl": "src",
         "paths": {
-            "@SRC/*": ["*"]
+            "@SRC/*": ["*"],
         },
         "plugins": [
             // Transform javascript file
             {
-                "transform": "typescript-transform-path-rewrite"
+                "transform": "typescript-transform-path-rewrite",
             },
             // Transform .d.ts file
             {
                 "transform": "typescript-transform-path-rewrite",
-                "afterDeclarations": true
-            }
-        ]
-    }
+                "afterDeclarations": true,
+            },
+        ],
+    },
 }
 ```
 
@@ -54,8 +54,8 @@ Use [ts-patch](https://github.com/nonara/ts-patch)'s `tspc` instead of `tsc`
 ```jsonc
 {
     "ts-node": {
-        "compiler": "ts-patch/compiler"
-    }
+        "compiler": "ts-patch/compiler",
+    },
 }
 ```
 

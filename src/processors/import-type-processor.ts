@@ -9,7 +9,7 @@ interface ParseResult extends BaseParseResult {
  * Processor for `typeof import('module')` or (in d.ts) `import ('module').Type`
  */
 export class ImportTypeProcessor extends Processor {
-    parse(node: typescript.Node): ParseResult {
+    parse(node: typescript.Node) {
         if (this.ts.isImportTypeNode(node)) {
             const argument = <typescript.LiteralTypeNode>node.argument;
             if (this.ts.isStringLiteral(argument.literal)) {
@@ -20,14 +20,14 @@ export class ImportTypeProcessor extends Processor {
                 };
             }
         }
-        return null;
+        return undefined;
     }
 
-    updateModuleName(moduleName: string, { node }: ParseResult): typescript.Node {
+    updateModuleName(moduleName: string, { node }: ParseResult) {
         return this.factory.updateImportTypeNode(
             node,
             this.factory.updateLiteralTypeNode(<typescript.LiteralTypeNode>node.argument, this.factory.createStringLiteral(moduleName)),
-            node.assertions,
+            node.attributes,
             node.qualifier,
             node.typeArguments,
             node.isTypeOf,

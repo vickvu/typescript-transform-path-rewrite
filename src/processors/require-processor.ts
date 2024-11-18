@@ -9,7 +9,7 @@ interface ParseResult extends BaseParseResult {
  * Processor for `require('module')`
  */
 export class RequireProcessor extends Processor {
-    parse(node: typescript.Node): ParseResult {
+    parse(node: typescript.Node): ParseResult | undefined {
         if (
             this.ts.isCallExpression(node) &&
             this.ts.isIdentifier(node.expression) &&
@@ -22,10 +22,10 @@ export class RequireProcessor extends Processor {
                 moduleName: node.arguments[0].text,
             };
         }
-        return null;
+        return undefined;
     }
 
-    updateModuleName(moduleName: string, { node }: ParseResult): typescript.Node {
+    updateModuleName(moduleName: string, { node }: ParseResult) {
         return this.factory.updateCallExpression(node, node.expression, node.typeArguments, [this.factory.createStringLiteral(moduleName)]);
     }
 }

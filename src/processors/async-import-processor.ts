@@ -9,7 +9,7 @@ interface ParseResult extends BaseParseResult {
  * Processor for `import('module').then()`
  */
 export class AsyncImportProcessor extends Processor {
-    parse(node: typescript.Node): ParseResult {
+    parse(node: typescript.Node) {
         if (
             this.ts.isCallExpression(node) &&
             node.expression.kind === this.ts.SyntaxKind.ImportKeyword &&
@@ -21,10 +21,10 @@ export class AsyncImportProcessor extends Processor {
                 moduleName: node.arguments[0].text,
             };
         }
-        return null;
+        return undefined;
     }
 
-    updateModuleName(moduleName: string, { node }: ParseResult): typescript.Node {
+    updateModuleName(moduleName: string, { node }: ParseResult) {
         return this.factory.updateCallExpression(node, node.expression, node.typeArguments, [this.factory.createStringLiteral(moduleName)]);
     }
 }

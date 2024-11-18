@@ -9,17 +9,17 @@ interface ParseResult extends BaseParseResult {
  * Processor for `import module = require('module')`
  */
 export class ImportRequireProcessor extends Processor {
-    parse(node: typescript.Node): ParseResult {
+    parse(node: typescript.Node) {
         if (this.ts.isExternalModuleReference(node) && this.ts.isStringLiteral(node.expression)) {
             return {
                 node,
                 moduleName: node.expression.text,
             };
         }
-        return null;
+        return undefined;
     }
 
-    updateModuleName(moduleName: string, { node }: ParseResult): typescript.Node {
+    updateModuleName(moduleName: string, { node }: ParseResult) {
         return this.factory.updateExternalModuleReference(node, this.factory.createStringLiteral(moduleName));
     }
 }

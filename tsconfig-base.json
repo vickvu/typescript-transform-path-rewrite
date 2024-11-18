@@ -16,7 +16,7 @@
         "pretty": true,
         "resolveJsonModule": true,
         "skipLibCheck": true,
-        "strict": false,
+        "strict": true,
         "traceResolution": false,
         "target": "es2020",
         "moduleResolution": "node"

@@ -15,9 +15,9 @@ export abstract class Processor {
     }
 
     /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-    parse(node: typescript.Node): BaseParseResult {
-        return null;
+    parse(node: typescript.Node): BaseParseResult | undefined {
+        return undefined;
     }
 
-    abstract updateModuleName(newModuleName: string, parseResult: BaseParseResult): typescript.Node;
+    abstract updateModuleName(newModuleName: string, parseResult: BaseParseResult): typescript.Node | undefined;
 }

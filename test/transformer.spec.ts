@@ -37,7 +37,7 @@ describe('Transformer', function () {
             const { stdout: output } = await execPromise('npm run exec', {
                 cwd: testCommonJsDir,
             });
-            (<object>JSON.parse(output.match(/(\{.+\})\s*$/m)[1])).should.eql({
+            (<object>JSON.parse((<string[]>output.match(/(\{.+\})\s*$/m))[1])).should.eql({
                 parseTemplate: 'function',
                 value1: 'VALUE1',
                 value2: 'MY_CLASS',
@@ -68,7 +68,7 @@ describe('Transformer', function () {
             const { stdout: output } = await execPromise('npm run exec', {
                 cwd: testESMDir,
             });
-            (<object>JSON.parse(output.match(/(\{.+\})\s*$/m)[1])).should.eql({
+            (<object>JSON.parse((<string[]>output.match(/(\{.+\})\s*$/m))[1])).should.eql({
                 value1: 'VALUE1',
                 value2: 'MY_CLASS',
             });
