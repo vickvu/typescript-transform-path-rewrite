@@ -12,6 +12,11 @@ const testESMDir = pathUtils.resolve(testProjectsDir, 'esm');
 const testESMTmpDir = [pathUtils.resolve(testESMDir, 'node_modules'), pathUtils.resolve(testESMDir, 'dist')];
 
 describe('Transformer', function () {
+    before(async function () {
+        const chai = await import('chai');
+        chai.should();
+    });
+
     describe('CommonJS module', function () {
         beforeEach(async function () {
             await Promise.all(testCommonJsTmpDir.map((dir) => rm(dir, { recursive: true, force: true })));

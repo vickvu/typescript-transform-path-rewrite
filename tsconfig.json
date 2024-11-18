@@ -4,7 +4,8 @@
     "compilerOptions": {
         "types": ["node", "mocha"],
         "outDir": "dist",
-        "module": "commonjs",
+        "module": "nodenext",
+        "moduleResolution": "nodenext",
         "rootDirs": ["src", "test"]
     }
 }

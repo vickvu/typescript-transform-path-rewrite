@@ -5,7 +5,7 @@ import prettierEslint from 'eslint-config-prettier';
 
 export default tsEslint.config(
     {
-        ignores: ['dist/**'],
+        ignores: ['dist/', 'test-projects/', 'eslint.config.mjs'],
     },
     {
         languageOptions: {
@@ -21,7 +21,7 @@ export default tsEslint.config(
     jsEslint.configs.recommended,
     ...tsEslint.configs.strictTypeChecked,
     {
-        files: ['test/**/*.spec.ts'],
+        files: ['test/**/*.ts'],
         ...mochaEslint.configs.flat.recommended,
     },
     prettierEslint,
