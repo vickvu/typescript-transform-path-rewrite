@@ -2,7 +2,7 @@
     "name": "typescript-transform-path-rewrite",
     "version": "1.3.0",
     "description": "Transform generated javascript import/require paths using typescript standard config",
-    "author": "Vick Vu <me@vick.vu>",
+    "author": "Vick Vu",
     "contributors": [],
     "keywords": [
         "typescript",

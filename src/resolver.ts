@@ -1,4 +1,4 @@
-import pathUtils from 'node:path';
+import pathUtils from 'node:path/posix';
 import debug from 'debug';
 import typescript, { ModuleKind } from 'typescript';
 import { PROJECT_NAME } from './constants';
