@@ -10,7 +10,7 @@ export default function (program: Program, pluginConfig: PluginConfig, extras?: 
     const compilerOptions = program.getCompilerOptions();
     const resolver = new Resolver(ts, compilerOptions, <Record<string, string>>pluginConfig.alias);
     return (ctx: TransformationContext) => {
-        const processors: Processor[] = createProcessors(ts, ctx.factory);
+        const processors: Processor[] = createProcessors(ts, ctx.factory, compilerOptions);
         return (sourceFile: SourceFile) => {
             function visitor(node: Node): Node {
                 let resultNode: Node | undefined;

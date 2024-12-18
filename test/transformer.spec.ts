@@ -64,6 +64,7 @@ describe('Transformer', function () {
             testFile.should.match(/from "\.\/lib2\/func1\.mjs"/);
             // Should not emmit import type
             testFile.should.not.match(/type/);
+            testFile.should.match(/import {} from "\.\/lib1\/t-only\.js"/);
             const dtsFile = await readFile(pathUtils.resolve(testESMDir, 'dist/index.d.ts'), 'utf-8');
             dtsFile.should.match(/import { type MyInterface2 } from "\.\/lib1\/index\.js"/);
             dtsFile.should.match(/import type { MyInterface } from "\.\/lib1\/types\.js"/);
