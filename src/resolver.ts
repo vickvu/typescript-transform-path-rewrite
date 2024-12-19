@@ -101,16 +101,17 @@ export class Resolver {
         }
         const normalisedResolvedFileDir = pathUtils.relative(sourceFileDir, resolvedFileDir);
         let normalisedResolvedFileBase = resolvedFileBaseWithoutExt;
-        if (this.isESM(originalSourceFileDir)) {
-            if (resolvedFileExt === '.ts' || resolvedFileExt === '.d.ts') {
+        if (resolvedFileExt === '.mts') {
+            normalisedResolvedFileBase += '.mjs';
+        } else if (resolvedFileExt === '.cts') {
+            normalisedResolvedFileBase += '.cjs';
+        } else if (resolvedFileExt === '.ts' || resolvedFileExt === '.d.ts') {
+            // Only add .js if is in ESM mode
+            if (this.isESM(originalSourceFileDir)) {
                 normalisedResolvedFileBase += '.js';
-            } else if (resolvedFileExt === '.mts') {
-                normalisedResolvedFileBase += '.mjs';
-            } else if (resolvedFileExt === '.cts') {
-                normalisedResolvedFileBase += '.cjs';
-            } else {
-                normalisedResolvedFileBase += resolvedFileExt;
             }
+        } else {
+            normalisedResolvedFileBase += resolvedFileExt;
         }
         let normalisedResolvedFilePath = pathUtils.join(normalisedResolvedFileDir, normalisedResolvedFileBase);
         if (!normalisedResolvedFilePath.startsWith('.')) {
