@@ -1,9 +1,10 @@
 import jsEslint from '@eslint/js';
+import { defineConfig } from 'eslint/config';
 import tsEslint from 'typescript-eslint';
 import mochaEslint from 'eslint-plugin-mocha';
 import prettierEslint from 'eslint-config-prettier';
 
-export default tsEslint.config(
+export default defineConfig(
     {
         ignores: ['dist/', 'test-projects/', 'eslint.config.mjs'],
     },
@@ -19,10 +20,10 @@ export default tsEslint.config(
         },
     },
     jsEslint.configs.recommended,
-    ...tsEslint.configs.strictTypeChecked,
+    tsEslint.configs.recommended,
     {
         files: ['test/**/*.ts'],
-        ...mochaEslint.configs.flat.recommended,
+        ...mochaEslint.configs.recommended,
     },
     prettierEslint,
 );

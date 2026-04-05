@@ -4,7 +4,6 @@ import typescript, { ModuleKind } from 'typescript';
 import { PROJECT_NAME } from './constants';
 import { existsSync, readFileSync } from 'node:fs';
 
-/* eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call*/
 const log: (msg: string) => void = debug(PROJECT_NAME);
 
 type Matcher = (moduleName: string, sourceFileName: string) => string | undefined;
@@ -121,7 +120,7 @@ export class Resolver {
     }
 
     isESM(sourceFileDir: string): boolean {
-        if (this.#compilerOptions.module === ModuleKind.Node16 || this.#compilerOptions.module === ModuleKind.NodeNext) {
+        if (this.#compilerOptions.module && this.#compilerOptions.module >= 100) {
             const pkg = this.findNearestPackageJson(sourceFileDir);
             return pkg.found && pkg.type === 'module';
         }
@@ -136,7 +135,6 @@ export class Resolver {
 
     private findNearestPackageJson(srcDir: string): PackageJson {
         if (!this.#cachedPackageJson[srcDir]) {
-            let oldSrcDir = srcDir;
             let currenSrcDir = srcDir;
             while (!this.#cachedPackageJson[srcDir]) {
                 // Try to read the package.json
@@ -160,7 +158,7 @@ export class Resolver {
                 }
                 if (!this.#cachedPackageJson[srcDir]) {
                     // Go to parent directory
-                    oldSrcDir = currenSrcDir;
+                    const oldSrcDir = currenSrcDir;
                     currenSrcDir = pathUtils.resolve(currenSrcDir, '..');
                     if (this.#cachedPackageJson[currenSrcDir]) {
                         // In the cache

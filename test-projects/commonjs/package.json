@@ -10,12 +10,12 @@
         "exec": "npm i && ts-node src3/start"
     },
     "devDependencies": {
-        "@types/node": "^20.8.2",
-        "node-fetch": "^3.3.1",
+        "@types/node": "^24.1.0",
+        "node-fetch": "^3.3.2",
         "should": "^13.2.3",
-        "ts-node": "^10.9.1",
-        "ts-patch": "^3.0.2",
-        "typescript": "^5.2.2",
-        "url-template": "^3.1.0"
+        "ts-node": "^10.9.2",
+        "ts-patch": "^3.3.0",
+        "typescript": "^6.0.2",
+        "url-template": "^3.1.1"
     }
 }

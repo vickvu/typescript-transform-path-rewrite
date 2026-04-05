@@ -3,9 +3,7 @@
     "extends": "./tsconfig-base.json",
     "compilerOptions": {
         "types": ["node", "mocha"],
-        "outDir": "dist",
-        "module": "nodenext",
-        "moduleResolution": "nodenext",
-        "rootDirs": ["src", "test"]
+        "rootDirs": ["src", "test"],
+        "rootDir": "."
     }
 }

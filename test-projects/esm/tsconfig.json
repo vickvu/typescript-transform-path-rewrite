@@ -21,16 +21,15 @@
         "traceResolution": false,
         "types": ["node"],
         "target": "es2020",
-        "baseUrl": "src",
         "rootDir": "src",
         "outDir": "dist",
         "module": "node16",
         "moduleResolution": "node16",
         "verbatimModuleSyntax": true,
         "paths": {
-            "@LIB1": ["lib1/index.ts"],
-            "@LIB1/*": ["lib1/*.ts"],
-            "@LIB2/*": ["lib2/*.mts", "lib2/*.ts"]
+            "@LIB1": ["./src/lib1/index.ts"],
+            "@LIB1/*": ["./src/lib1/*.ts"],
+            "@LIB2/*": ["./src/lib2/*.mts", "./src/lib2/*.ts"]
         },
         "plugins": [
             {

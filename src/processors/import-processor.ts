@@ -16,7 +16,6 @@ function isNamedImports(bindings: NamedImportBindings): bindings is NamedImports
 export class ImportProcessor extends Processor {
     parse(node: typescript.Node) {
         if (this.ts.isImportDeclaration(node) && this.ts.isStringLiteral(node.moduleSpecifier)) {
-            /* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition */
             if (node.importClause == null || node.getSourceFile() == null) {
                 return {
                     node,
@@ -53,7 +52,7 @@ export class ImportProcessor extends Processor {
                 node.modifiers,
                 node.importClause,
                 this.factory.createStringLiteral(moduleName),
-                /* eslint-disable-next-line @typescript-eslint/no-deprecated */
+
                 node.assertClause,
             );
         }
@@ -65,7 +64,7 @@ export class ImportProcessor extends Processor {
         if (node.importClause.isTypeOnly) {
             return undefined;
         }
-        let namedImports = node.importClause.namedBindings;
+        let namedImports: NamedImports | undefined; // = node.importClause.namedBindings;
         if (nonTypeNamedBindings.length === 0) {
             if (node.importClause.name) {
                 // If import has default name for e.g. `import abc, { type A, type B, type C } from '...'`
@@ -92,7 +91,7 @@ export class ImportProcessor extends Processor {
             node.modifiers,
             this.factory.updateImportClause(node.importClause, false, node.importClause.name, namedImports),
             this.factory.createStringLiteral(moduleName),
-            /* eslint-disable-next-line @typescript-eslint/no-deprecated */
+
             node.assertClause,
         );
     }

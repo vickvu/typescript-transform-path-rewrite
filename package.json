@@ -26,7 +26,7 @@
     },
     "license": "MIT",
     "engines": {
-        "node": ">=18"
+        "node": ">=20"
     },
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
@@ -48,25 +48,24 @@
         "dist"
     ],
     "devDependencies": {
-        "@eslint/js": "^9.15.0",
-        "@types/chai": "^5.0.1",
-        "@types/eslint__js": "^8.42.3",
-        "@types/mocha": "^10.0.9",
-        "@types/node": "^22.9.0",
-        "@typescript-eslint/eslint-plugin": "^8.14.0",
-        "@typescript-eslint/parser": "^8.14.0",
-        "chai": "^5.1.2",
-        "eslint": "^9.15.0",
-        "eslint-config-prettier": "^9.1.0",
-        "eslint-plugin-mocha": "^10.5.0",
-        "mocha": "^10.8.2",
-        "prettier": "^3.3.3",
+        "@eslint/js": "^10.0.1",
+        "@types/chai": "^5.2.3",
+        "@types/mocha": "^10.0.10",
+        "@types/node": "^24.1.0",
+        "@typescript-eslint/eslint-plugin": "^8.58.0",
+        "@typescript-eslint/parser": "^8.58.0",
+        "chai": "^6.2.2",
+        "eslint": "^10.2.0",
+        "eslint-config-prettier": "^10.1.8",
+        "eslint-plugin-mocha": "^11.2.0",
+        "mocha": "^11.7.5",
+        "prettier": "^3.8.1",
         "ts-node": "^10.9.2",
-        "ts-patch": "^3.2.1",
-        "typescript": "^5.6.3",
-        "typescript-eslint": "^8.14.1-alpha.6"
+        "ts-patch": "^3.3.0",
+        "typescript": "^6.0.2",
+        "typescript-eslint": "^8.58.0"
     },
     "dependencies": {
-        "debug": "^4.3.7"
+        "debug": "^4.4.3"
     }
 }

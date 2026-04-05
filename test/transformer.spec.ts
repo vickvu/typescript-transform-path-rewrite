@@ -2,6 +2,7 @@ import util from 'node:util';
 import { exec } from 'node:child_process';
 import pathUtils from 'node:path';
 import { readFile, rm } from 'node:fs/promises';
+import { expect } from 'chai';
 
 const execPromise = util.promisify(exec);
 const currentDir = process.cwd();
@@ -27,22 +28,22 @@ describe('Transformer', function () {
                 cwd: testCommonJsDir,
             });
             const testFile = await readFile(pathUtils.resolve(testCommonJsDir, 'dist/src/index.js'), 'utf-8');
-            testFile.should.match(/require\("\.\/lib1\/index"\)/);
-            testFile.should.match(/import\("url-template"\)/);
-            testFile.should.match(/require\("\.\/lib2\/func1"\)/);
-            testFile.should.match(/require\("\.\/lib2\/func2"\)/);
+            expect(testFile).to.match(/require\("\.\/lib1\/index"\)/);
+            expect(testFile).to.match(/import\("url-template"\)/);
+            expect(testFile).to.match(/require\("\.\/lib2\/func1"\)/);
+            expect(testFile).to.match(/require\("\.\/lib2\/func2"\)/);
             // Should not emmit import type
-            testFile.should.not.match(/type /);
+            expect(testFile).to.not.match(/type /);
             const dtsFile = await readFile(pathUtils.resolve(testCommonJsDir, 'dist/src/index.d.ts'), 'utf-8');
-            dtsFile.should.match(/import { type MyInterface2 } from "\.\/lib1\/index"/);
-            dtsFile.should.match(/import type { MyInterface } from "\.\/lib1\/types"/);
+            expect(dtsFile).to.match(/import { type MyInterface2 } from "\.\/lib1\/index"/);
+            expect(dtsFile).to.match(/import type { MyInterface } from "\.\/lib1\/types"/);
         });
 
         it('should resolve module in ts-node', async function () {
             const { stdout: output } = await execPromise('npm run exec', {
                 cwd: testCommonJsDir,
             });
-            (<object>JSON.parse((<string[]>output.match(/(\{.+\})\s*$/m))[1])).should.eql({
+            expect(<object>JSON.parse((<string[]>output.match(/(\{.+\})\s*$/m))[1])).to.eql({
                 parseTemplate: 'function',
                 value1: 'VALUE1',
                 value2: 'MY_CLASS',
@@ -60,21 +61,21 @@ describe('Transformer', function () {
                 cwd: testESMDir,
             });
             const testFile = await readFile(pathUtils.resolve(testESMDir, 'dist/index.js'), 'utf-8');
-            testFile.should.match(/from "\.\/lib1\/index\.js"/);
-            testFile.should.match(/from "\.\/lib2\/func1\.mjs"/);
+            expect(testFile).to.match(/from "\.\/lib1\/index\.js"/);
+            expect(testFile).to.match(/from "\.\/lib2\/func1\.mjs"/);
             // Should not emmit import type
-            testFile.should.not.match(/type/);
-            testFile.should.match(/import {} from "\.\/lib1\/t-only\.js"/);
+            expect(testFile).to.not.match(/type/);
+            expect(testFile).to.match(/import {} from "\.\/lib1\/t-only\.js"/);
             const dtsFile = await readFile(pathUtils.resolve(testESMDir, 'dist/index.d.ts'), 'utf-8');
-            dtsFile.should.match(/import { type MyInterface2 } from "\.\/lib1\/index\.js"/);
-            dtsFile.should.match(/import type { MyInterface } from "\.\/lib1\/types\.js"/);
+            expect(dtsFile).to.match(/import { type MyInterface2 } from "\.\/lib1\/index\.js"/);
+            expect(dtsFile).to.match(/import type { MyInterface } from "\.\/lib1\/types\.js"/);
         });
 
         it('should resolve module in ts-node', async function () {
             const { stdout: output } = await execPromise('npm run exec', {
                 cwd: testESMDir,
             });
-            (<object>JSON.parse((<string[]>output.match(/(\{.+\})\s*$/m))[1])).should.eql({
+            expect(<object>JSON.parse((<string[]>output.match(/(\{.+\})\s*$/m))[1])).to.eql({
                 value1: 'VALUE1',
                 value2: 'MY_CLASS',
             });

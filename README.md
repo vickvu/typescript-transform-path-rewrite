@@ -22,9 +22,8 @@ npm install --save-dev typescript-transform-path-rewrite
 ```jsonc
 {
     "compilerOptions": {
-        "baseUrl": "src",
         "paths": {
-            "@SRC/*": ["*"],
+            "@SRC/*": ["./src/*"],
         },
         "plugins": [
             // Transform javascript file
@@ -76,9 +75,8 @@ Custom rules can be added using regular expression, for example
 ```jsonc
 {
    "compilerOptions": {
-       "baseUrl": "src",
        "paths": {
-           "@SRC/*": ["*"]
+           "@SRC/*": ["./src/*"]
        },
        "plugins": [
            {

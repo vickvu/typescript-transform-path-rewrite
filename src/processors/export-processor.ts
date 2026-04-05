@@ -26,7 +26,7 @@ export class ExportProcessor extends Processor {
             node.isTypeOnly,
             node.exportClause,
             this.factory.createStringLiteral(moduleName),
-            /* eslint-disable-next-line @typescript-eslint/no-deprecated */
+
             node.assertClause,
         );
     }
