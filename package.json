@@ -1,12 +1,16 @@
 {
     "name": "typescript-transform-path-rewrite",
-    "version": "1.4.2",
+    "version": "1.5.0",
     "description": "Transform generated javascript import/require paths using typescript standard config",
     "author": "Vick Vu",
     "contributors": [],
     "keywords": [
         "typescript",
         "typescript5",
+        "typescript6",
+        "ts",
+        "ts5",
+        "ts6",
         "ts-patch",
         "ts-node",
         "transform",
