@@ -71,7 +71,7 @@ export class Resolver {
 
     private resolveModule(sourceFilePath: string, moduleName: string) {
         const { resolvedModule } = this.#ts.resolveModuleName(moduleName, sourceFilePath, this.#compilerOptions, this.#ts.sys);
-        if (!resolvedModule || resolvedModule.packageId) {
+        if (!resolvedModule || resolvedModule.isExternalLibraryImport) {
             return undefined;
         }
         let resolvedFileDir = pathUtils.dirname(resolvedModule.resolvedFileName);
