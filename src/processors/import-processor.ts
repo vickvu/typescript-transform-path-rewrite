@@ -1,10 +1,23 @@
-import typescript, { ImportSpecifier, NamedImportBindings, NamedImports, SyntaxKind } from 'typescript';
+import typescript, { ImportSpecifier, NamedImportBindings, NamedImports, SyntaxKind, ImportClause, NodeFactory } from 'typescript';
 import { BaseParseResult, Processor } from './processor';
 
 interface ParseResult extends BaseParseResult {
     node: typescript.ImportDeclaration;
     keepImport: boolean;
     nonTypeNamedBindings: ImportSpecifier[];
+}
+
+function isTypeOnly(ic: ImportClause | undefined) {
+    // Still using isTypeOnly in case ic.phaseModifier does not exist to be backward-compatibile
+    return ic != null && ((ic.phaseModifier != null && ic.phaseModifier === SyntaxKind.TypeKeyword) || ic.isTypeOnly);
+}
+
+function updateImportClause(factory: NodeFactory, ic: ImportClause, namedBindings: NamedImportBindings | undefined) {
+    if (ic.phaseModifier != null) {
+        return factory.updateImportClause(ic, SyntaxKind.TypeKeyword, ic.name, namedBindings);
+    }
+    // Still using the deprecated functioin in case ic.phaseModifier does not exist to be backward-compatibile
+    return factory.updateImportClause(ic, false, ic.name, namedBindings);
 }
 
 function isNamedImports(bindings: NamedImportBindings): bindings is NamedImports {
@@ -25,7 +38,7 @@ export class ImportProcessor extends Processor {
                 };
             }
             const nonTypeNamedBindings: ImportSpecifier[] = [];
-            if (!node.importClause.isTypeOnly && node.importClause.namedBindings) {
+            if (!isTypeOnly(node.importClause) && node.importClause.namedBindings) {
                 if (isNamedImports(node.importClause.namedBindings)) {
                     node.importClause.namedBindings.elements.forEach(function (importSpecifier) {
                         if (!importSpecifier.isTypeOnly) {
@@ -45,7 +58,7 @@ export class ImportProcessor extends Processor {
     }
 
     updateModuleName(moduleName: string, { node, keepImport, nonTypeNamedBindings }: ParseResult) {
-        if (keepImport || node.importClause?.isTypeOnly) {
+        if (keepImport || isTypeOnly(node.importClause)) {
             // For synthetic files and file without import caluse (for .e.g. import '../src'),
             // and file with type only import, preserve the import
             // Since we can't detect whether we are in .js or .d.ts mode, we just simply rewrite the import anyway
@@ -89,9 +102,8 @@ export class ImportProcessor extends Processor {
         return this.factory.updateImportDeclaration(
             node,
             node.modifiers,
-            this.factory.updateImportClause(node.importClause, false, node.importClause.name, namedImports),
+            updateImportClause(this.factory, node.importClause, namedImports),
             this.factory.createStringLiteral(moduleName),
-
             node.assertClause,
         );
     }
