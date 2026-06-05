@@ -45,8 +45,12 @@ export class ImportProcessor extends Processor {
     }
 
     updateModuleName(moduleName: string, { node, keepImport, nonTypeNamedBindings }: ParseResult) {
-        if (keepImport) {
-            // For .d.ts file and file without import caluse (for .e.g. import '../src'), preserve the import
+        if (keepImport || node.importClause?.isTypeOnly) {
+            // For synthetic files and file without import caluse (for .e.g. import '../src'),
+            // and file with type only import, preserve the import
+            // Since we can't detect whether we are in .js or .d.ts mode, we just simply rewrite the import anyway
+            // and TypeScript will remove type only import automtically when producing js file
+            // and keep type only import for .d.ts files
             return this.factory.updateImportDeclaration(
                 node,
                 node.modifiers,
@@ -59,10 +63,6 @@ export class ImportProcessor extends Processor {
         if (!node.importClause) {
             // Should not happen since keepImport must be true
             throw new Error('Import clause cannot be null');
-        }
-        // Do not emit import for type only import i.e. `import type { A, B, C } from '...'`
-        if (node.importClause.isTypeOnly) {
-            return undefined;
         }
         let namedImports: NamedImports | undefined; // = node.importClause.namedBindings;
         if (nonTypeNamedBindings.length === 0) {

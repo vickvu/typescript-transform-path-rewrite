@@ -2,6 +2,7 @@ import { getValue as getValue1, type MyInterface2 } from '@LIB1/index';
 import type { MyInterface } from '@LIB1/types';
 import { type MyInterface3 } from '@LIB1/t-only';
 import { func1 } from '@LIB2/func1';
+import type MyDefaultClass from '@LIB2/default';
 
 export function func(): MyInterface {
     return func1();
@@ -19,3 +20,5 @@ console.log(
         value2: func().name,
     }),
 );
+
+export type { MyInterface, MyInterface3, MyDefaultClass };

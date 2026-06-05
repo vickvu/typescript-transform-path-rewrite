@@ -69,6 +69,7 @@ describe('Transformer', function () {
             const dtsFile = await readFile(pathUtils.resolve(testESMDir, 'dist/index.d.ts'), 'utf-8');
             expect(dtsFile).to.match(/import { type MyInterface2 } from "\.\/lib1\/index\.js"/);
             expect(dtsFile).to.match(/import type { MyInterface } from "\.\/lib1\/types\.js"/);
+            expect(dtsFile).to.match(/import type MyDefaultClass from "\.\/lib2\/default\.js"/);
         });
 
         it('should resolve module in ts-node', async function () {
