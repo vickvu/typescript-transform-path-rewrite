@@ -23,12 +23,13 @@
         "target": "es2020",
         "rootDir": "src",
         "outDir": "dist",
-        "module": "node16",
+        "module": "node18",
         "moduleResolution": "node16",
         "verbatimModuleSyntax": true,
         "paths": {
             "@LIB1": ["./src/lib1/index.ts"],
             "@LIB1/*": ["./src/lib1/*.ts"],
+            "@LIB2/data": ["./src/lib2/data.json"],
             "@LIB2/*": ["./src/lib2/*.mts", "./src/lib2/*.ts"]
         },
         "plugins": [

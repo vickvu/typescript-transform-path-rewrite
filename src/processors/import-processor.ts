@@ -69,8 +69,8 @@ export class ImportProcessor extends Processor {
                 node.modifiers,
                 node.importClause,
                 this.factory.createStringLiteral(moduleName),
-
-                node.assertClause,
+                // Use the newer property `attributes` but still fall back to `assertClause` for backward-compatibility
+                node.attributes ?? node.assertClause,
             );
         }
         if (!node.importClause) {
@@ -90,7 +90,7 @@ export class ImportProcessor extends Processor {
                     namedImports = this.factory.updateNamedImports(<NamedImports>node.importClause.namedBindings, []);
                 } else {
                     // If import does not have default name for e.g. `import { type A, type B, type C } from '...'`
-                    // And we have verbatimModuleSyntax=false, we just don't emit this import
+                    // And we have verbatimModuleSyntax=false, we return undefined so TypeScript will remove it
                     // TODO: check importsNotUsedAsValues and preserveValueImports (but they are deprecated anyway)
                     return undefined;
                 }
@@ -104,7 +104,8 @@ export class ImportProcessor extends Processor {
             node.modifiers,
             updateImportClause(this.factory, node.importClause, namedImports),
             this.factory.createStringLiteral(moduleName),
-            node.assertClause,
+            // Use the newer property `attributes` but still fall back to `assertClause` for backward-compatibility
+            node.attributes ?? node.assertClause,
         );
     }
 }

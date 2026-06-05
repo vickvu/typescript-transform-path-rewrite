@@ -26,6 +26,7 @@
         "outDir": "dist",
         "module": "node16",
         "moduleResolution": "node16",
+        "verbatimModuleSyntax": false,
         "paths": {
             "@LIB1": ["./src/lib1"],
             "@LIB1/*": ["./src/lib1/*"],

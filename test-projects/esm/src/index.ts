@@ -3,6 +3,7 @@ import type { MyInterface } from '@LIB1/types';
 import { type MyInterface3 } from '@LIB1/t-only';
 import { func1 } from '@LIB2/func1';
 import type MyDefaultClass from '@LIB2/default';
+import data from '@LIB2/data' with { type: 'json' };
 
 export function func(): MyInterface {
     return func1();
@@ -18,6 +19,7 @@ console.log(
     JSON.stringify({
         value1: getValue1(),
         value2: func().name,
+        data,
     }),
 );
 

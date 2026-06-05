@@ -34,6 +34,7 @@ describe('Transformer', function () {
             expect(testFile).to.match(/require\("\.\/lib2\/func2"\)/);
             // Should not emmit import type
             expect(testFile).to.not.match(/type /);
+            expect(testFile).to.not.match(/MyClass/);
             const dtsFile = await readFile(pathUtils.resolve(testCommonJsDir, 'dist/src/index.d.ts'), 'utf-8');
             expect(dtsFile).to.match(/import { type MyInterface2 } from "\.\/lib1\/index"/);
             expect(dtsFile).to.match(/import type { MyInterface } from "\.\/lib1\/types"/);
@@ -63,8 +64,6 @@ describe('Transformer', function () {
             const testFile = await readFile(pathUtils.resolve(testESMDir, 'dist/index.js'), 'utf-8');
             expect(testFile).to.match(/from "\.\/lib1\/index\.js"/);
             expect(testFile).to.match(/from "\.\/lib2\/func1\.mjs"/);
-            // Should not emmit import type
-            expect(testFile).to.not.match(/type/);
             expect(testFile).to.match(/import {} from "\.\/lib1\/t-only\.js"/);
             const dtsFile = await readFile(pathUtils.resolve(testESMDir, 'dist/index.d.ts'), 'utf-8');
             expect(dtsFile).to.match(/import { type MyInterface2 } from "\.\/lib1\/index\.js"/);
@@ -79,6 +78,9 @@ describe('Transformer', function () {
             expect(<object>JSON.parse((<string[]>output.match(/(\{.+\})\s*$/m))[1])).to.eql({
                 value1: 'VALUE1',
                 value2: 'MY_CLASS',
+                data: {
+                    hello: 'world',
+                },
             });
         });
     });

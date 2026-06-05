@@ -1,5 +1,6 @@
 import { getValue as getValue1, type MyInterface2 } from '@LIB1';
 import type { MyInterface } from '@LIB1/types';
+import { type MyClass } from '@LIB2/class';
 import { func1 } from '@LIB2/func1';
 // node-fetch will be replaced by url-template in runtime
 // per tsconfig.json setting
@@ -24,3 +25,4 @@ export function func1a(): MyInterface2 {
 
 export type MyConst = typeof import('@LIB2/constants');
 export { func2 } from '@LIB2/func2';
+export { MyClass };
